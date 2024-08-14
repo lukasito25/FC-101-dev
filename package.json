@@ -1,5 +1,5 @@
 {
-  "name": "my-react-app",
+  "name": "my-react-app-dev",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -13,8 +13,9 @@
   },
   "scripts": {
     "test": "react-scripts test",
-    "start": "react-scripts start",
-    "start-server": "node server.js",
+    "start-client-dev": "PORT=3002 react-scripts start",
+    "start-server-dev": "PORT=5001 node server.js",
+    "start-dev": "concurrently \"npm run start-server-dev\" \"npm run start-client-dev\"",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
@@ -38,3 +39,4 @@
     ]
   }
 }
+

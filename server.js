@@ -3,26 +3,20 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 
 const app = express();
+const port = process.env.PORT || 5000; // Use the PORT environment variable or default to 5000
 
-// Use the PORT environment variable, or default to 5000
-const port = process.env.PORT || 5000;
-
-// Use the DATABASE_URL environment variable, or default to './dashboard.db'
-const dbPath = process.env.DATABASE_URL || './dashboard.db';
-
-// Use CORS with the origin set via environment variable
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN || '*', // Allow all origins if not set
-};
-app.use(cors(corsOptions));
+// CORS configuration
+app.use(cors({
+  origin: 'https://71361e57-5621-4ce9-a477-742aef29fe22-00-23dssehx19ldy.kirk.replit.dev/' 
+}));
 
 // Middleware
 app.use(express.json());
 
 // Initialize the SQLite database
-const db = new sqlite3.Database(dbPath, (err) => {
+const db = new sqlite3.Database(process.env.DATABASE_URL || './dashboard.db', (err) => {
   if (err) {
-    console.error('Error opening database:', err.message);
+    console.error('Error opening database', err.message);
   } else {
     db.serialize(() => {
       // Create the `entries` table
@@ -38,7 +32,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
         complexity INTEGER
       )`, (err) => {
         if (err) {
-          console.error('Error creating entries table:', err.message);
+          console.error('Error creating entries table', err.message);
         } else {
           console.log('Table "entries" created or already exists.');
         }
@@ -57,7 +51,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
         FOREIGN KEY (entryId) REFERENCES entries(id) ON DELETE CASCADE
       )`, (err) => {
         if (err) {
-          console.error('Error creating exercises table:', err.message);
+          console.error('Error creating exercises table', err.message);
         } else {
           console.log('Table "exercises" created or already exists.');
         }
@@ -206,8 +200,9 @@ app.get('/ping', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
+
 
 
 
