@@ -12,6 +12,7 @@ const Dashboard = () => {
     sessions: 0,
     minutes: 0,
   });
+  const [expandedSessionId, setExpandedSessionId] = useState(null);
 
   const calculateMetrics = (data) => {
     const sessions = data.length;
@@ -61,7 +62,6 @@ const Dashboard = () => {
   };
 
   const handleExport = () => {
-    // Implement export functionality here
     console.log('Exporting filtered data:', filteredEntries);
   };
 
@@ -71,7 +71,7 @@ const Dashboard = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(entry),  // Ensure entry is correctly formatted
+      body: JSON.stringify(entry),
     })
     .then((response) => {
       if (!response.ok) {
@@ -88,12 +88,15 @@ const Dashboard = () => {
     .catch((error) => console.error('Error adding entry:', error));
   };
 
+  const toggleExpandSession = (id) => {
+    setExpandedSessionId(expandedSessionId === id ? null : id);
+  };
+
   return (
     <div style={styles.container}>
       <Header />
       <FilterBar onFilterChange={handleFilterChange} onExport={handleExport} />
 
-      {/* Top Metrics Section */}
       <div style={styles.metricsContainer}>
         <div style={styles.metricBox}>
           <span style={styles.metricNumber}>{metrics.sessions}</span>
@@ -123,9 +126,51 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {filteredEntries.map((entry) => (
-                <tr key={entry.id}>
-                  <td style={styles.td}>{entry.date}</td><td style={styles.td}>{entry.microcycle}</td><td style={styles.td}>{entry.sessionType}</td><td style={styles.td}>{entry.volume}</td><td style={styles.td}>{entry.intensity}</td><td style={styles.td}>{entry.objective1}</td>
-                </tr>
+                <React.Fragment key={entry.id}>
+                  <tr style={styles.row} onClick={() => toggleExpandSession(entry.id)}>
+                    <td style={styles.td}>{entry.date}</td>
+                    <td style={styles.td}>{entry.microcycle}</td>
+                    <td style={styles.td}>{entry.sessionType}</td>
+                    <td style={styles.td}>{entry.volume}</td>
+                    <td style={styles.td}>{entry.intensity}</td>
+                    <td style={styles.td}>{entry.objective1}</td>
+                  </tr>
+                  {expandedSessionId === entry.id && (
+                    <tr>
+                      <td style={styles.expandedRow} colSpan="6">
+                        <div style={styles.expandedContent}>
+                          <h3>Additional Details</h3>
+                          <p><strong>Objective 2:</strong> {entry.objective2}</p>
+                          <h4>Exercises:</h4>
+                          <table style={styles.exerciseTable}>
+                            <thead>
+                              <tr>
+                                <th style={styles.exerciseTableHeader}>Goal</th>
+                                <th style={styles.exerciseTableHeader}>Type</th>
+                                <th style={styles.exerciseTableHeader}>Focus</th>
+                                <th style={styles.exerciseTableHeader}>Description</th>
+                                <th style={styles.exerciseTableHeader}>Duration</th>
+                                <th style={styles.exerciseTableHeader}>Fitness Indicator</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {entry.exercises.map(exercise => (
+                                <tr key={exercise.id}>
+                                  <td style={styles.exerciseTableCell}>{exercise.goal}</td>
+                                  <td style={styles.exerciseTableCell}>{exercise.exerciseType}</td>
+                                  <td style={styles.exerciseTableCell}>{exercise.focus}</td>
+                                  <td style={styles.exerciseTableCell}>{exercise.description}</td>
+                                  <td style={styles.exerciseTableCell}>{exercise.duration}</td>
+                                  <td style={styles.exerciseTableCell}>{exercise.fitnessIndicator}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
@@ -210,6 +255,35 @@ const styles = {
     borderBottom: '1px solid #e6e6e6',
     color: '#555',
   },
+  row: {
+    cursor: 'pointer',
+  },
+  expandedRow: {
+    backgroundColor: '#f9f9f9',
+    padding: '20px',
+  },
+  expandedContent: {
+    padding: '10px',
+    backgroundColor: '#f0f0f0',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  },
+  exerciseTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '10px',
+  },
+  exerciseTableHeader: {
+    padding: '8px 10px',
+    backgroundColor: '#e1e1e1',
+    borderBottom: '1px solid #ddd',
+    textAlign: 'left',
+  },
+  exerciseTableCell: {
+    padding: '8px 10px',
+    borderBottom: '1px solid #ddd',
+    textAlign: 'left',
+  },
   '@media (max-width: 768px)': {
     metricsContainer: {
       flexDirection: 'column',
@@ -232,6 +306,10 @@ const styles = {
 };
 
 export default Dashboard;
+
+
+
+
 
 
 
