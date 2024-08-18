@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell } from 'docx';
+import { saveAs } from 'file-saver';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
 import FilterBar from './FilterBar';
 import AddEntryForm from './AddEntryForm';
@@ -61,8 +65,76 @@ const Dashboard = () => {
     calculateMetrics(filtered);
   };
 
-  const handleExport = () => {
-    console.log('Exporting filtered data:', filteredEntries);
+  const handleExportEntry = (entry) => {
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              text: `Training Session on ${entry.date}`,
+              heading: 'Title',
+            }),
+            new Paragraph({
+              text: `Microcycle: ${entry.microcycle}`,
+              spacing: { after: 200 },
+            }),
+            new Paragraph({
+              text: `Session Type: ${entry.sessionType}`,
+              spacing: { after: 200 },
+            }),
+            new Paragraph({
+              text: `Volume: ${entry.volume}`,
+              spacing: { after: 200 },
+            }),
+            new Paragraph({
+              text: `Intensity: ${entry.intensity}`,
+              spacing: { after: 200 },
+            }),
+            new Paragraph({
+              text: `Objective 1: ${entry.objective1}`,
+              spacing: { after: 200 },
+            }),
+            new Paragraph({
+              text: `Objective 2: ${entry.objective2 || 'N/A'}`,
+              spacing: { after: 400 },
+            }),
+            new Paragraph({
+              text: 'Exercises',
+              heading: 'Heading1',
+              spacing: { after: 400 },
+            }),
+            new Table({
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({ children: [new Paragraph('Goal')] }),
+                    new TableCell({ children: [new Paragraph('Type')] }),
+                    new TableCell({ children: [new Paragraph('Focus')] }),
+                    new TableCell({ children: [new Paragraph('Description')] }),
+                    new TableCell({ children: [new Paragraph('Duration')] }),
+                    new TableCell({ children: [new Paragraph('Fitness Indicator')] }),
+                  ],
+                }),
+                ...entry.exercises.map(exercise => new TableRow({
+                  children: [
+                    new TableCell({ children: [new Paragraph(exercise.goal)] }),
+                    new TableCell({ children: [new Paragraph(exercise.exerciseType)] }),
+                    new TableCell({ children: [new Paragraph(exercise.focus)] }),
+                    new TableCell({ children: [new Paragraph(exercise.description)] }),
+                    new TableCell({ children: [new Paragraph(`${exercise.duration} minutes`)] }),
+                    new TableCell({ children: [new Paragraph(exercise.fitnessIndicator)] }),
+                  ],
+                })),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then(blob => {
+      saveAs(blob, `Training_Session_${entry.date}.docx`);
+    });
   };
 
   const handleAddEntry = (entry) => {
@@ -95,7 +167,7 @@ const Dashboard = () => {
   return (
     <div style={styles.container}>
       <Header />
-      <FilterBar onFilterChange={handleFilterChange} onExport={handleExport} />
+      <FilterBar onFilterChange={handleFilterChange} />
 
       <div style={styles.metricsContainer}>
         <div style={styles.metricBox}>
@@ -139,6 +211,14 @@ const Dashboard = () => {
                     <tr>
                       <td style={styles.expandedRow} colSpan="6">
                         <div style={styles.expandedContent}>
+                          <div style={styles.exportIconContainer}>
+                            <FontAwesomeIcon
+                              icon={faDownload}
+                              style={styles.exportIcon}
+                              onClick={() => handleExportEntry(entry)}
+                              title="Export to Word"
+                            />
+                          </div>
                           <h3>Additional Details</h3>
                           <p><strong>Objective 2:</strong> {entry.objective2}</p>
                           <h4>Exercises:</h4>
@@ -267,6 +347,17 @@ const styles = {
     backgroundColor: '#f0f0f0',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    position: 'relative',
+  },
+  exportIconContainer: {
+    position: 'absolute',
+    right: '10px',
+    top: '10px',
+  },
+  exportIcon: {
+    fontSize: '24px',
+    color: '#4CAF50',
+    cursor: 'pointer',
   },
   exerciseTable: {
     width: '100%',
@@ -306,6 +397,11 @@ const styles = {
 };
 
 export default Dashboard;
+
+
+
+
+
 
 
 
