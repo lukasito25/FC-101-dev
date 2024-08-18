@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 
@@ -8,6 +8,13 @@ const FilterBar = ({ onFilterChange, entries }) => {
   const [objective, setObjective] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [availableMicrocycles, setAvailableMicrocycles] = useState([]);
+
+  useEffect(() => {
+    // Dynamically generate microcycle options based on the entries
+    const microcycles = Array.from(new Set(entries.map(entry => entry.microcycle))).sort((a, b) => a - b);
+    setAvailableMicrocycles(microcycles);
+  }, [entries]);
 
   const handleFilterChange = () => {
     onFilterChange({
@@ -115,11 +122,9 @@ const FilterBar = ({ onFilterChange, entries }) => {
           style={styles.select}
         >
           <option value="">All Microcycles</option>
-          <option value="1">Microcycle 1</option>
-          <option value="2">Microcycle 2</option>
-          <option value="3">Microcycle 3</option>
-          <option value="4">Microcycle 4</option>
-          <option value="5">Microcycle 5</option>
+          {availableMicrocycles.map(mc => (
+            <option key={mc} value={mc}>Microcycle {mc}</option>
+          ))}
         </select>
       </div>
 
@@ -138,7 +143,7 @@ const FilterBar = ({ onFilterChange, entries }) => {
       </div>
 
       <div style={styles.filterItem}>
-        <label style={styles.label}>Start Date:</label>
+        <label style={styles.label}>From Date:</label>
         <input
           type="date"
           value={startDate}
@@ -151,7 +156,7 @@ const FilterBar = ({ onFilterChange, entries }) => {
       </div>
 
       <div style={styles.filterItem}>
-        <label style={styles.label}>End Date:</label>
+        <label style={styles.label}>To Date:</label>
         <input
           type="date"
           value={endDate}
@@ -242,6 +247,7 @@ const styles = {
 };
 
 export default FilterBar;
+
 
 
 
