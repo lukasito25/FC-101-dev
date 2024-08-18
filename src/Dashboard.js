@@ -65,6 +65,48 @@ const Dashboard = () => {
     calculateMetrics(filtered);
   };
 
+  // Function to handle export of filtered sessions based on filter bar criteria
+  const handleExportFiltered = () => {
+    if (filteredEntries.length === 0) {
+      alert('No entries to export.');
+      return;
+    }
+
+    const doc = new Document({
+      sections: [
+        {
+          children: filteredEntries.map(entry => new Paragraph({
+            children: [
+              new TextRun({ text: `Date: ${entry.date}`, bold: true }),
+              new TextRun(`\nMicrocycle: ${entry.microcycle}`),
+              new TextRun(`\nSession Type: ${entry.sessionType}`),
+              new TextRun(`\nVolume: ${entry.volume}`),
+              new TextRun(`\nIntensity: ${entry.intensity}`),
+              new TextRun(`\nObjective 1: ${entry.objective1}`),
+              new TextRun(`\nObjective 2: ${entry.objective2 || 'N/A'}`),
+              new TextRun(`\nExercises:`),
+              ...entry.exercises.map(exercise => new Paragraph({
+                children: [
+                  new TextRun(`\n  - Goal: ${exercise.goal}`),
+                  new TextRun(`\n  - Type: ${exercise.exerciseType}`),
+                  new TextRun(`\n  - Focus: ${exercise.focus}`),
+                  new TextRun(`\n  - Description: ${exercise.description}`),
+                  new TextRun(`\n  - Duration: ${exercise.duration} minutes`),
+                  new TextRun(`\n  - Fitness Indicator: ${exercise.fitnessIndicator}`),
+                ],
+              })),
+            ],
+          })),
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then(blob => {
+      saveAs(blob, 'Filtered_Training_Sessions.docx');
+    });
+  };
+
+  // Function to handle export of individual session
   const handleExportEntry = (entry) => {
     const doc = new Document({
       sections: [
@@ -167,7 +209,11 @@ const Dashboard = () => {
   return (
     <div style={styles.container}>
       <Header />
-      <FilterBar onFilterChange={handleFilterChange} />
+      <FilterBar 
+        onFilterChange={handleFilterChange}
+        onExport={handleExportFiltered}
+        entries={entries} // Pass the entries to FilterBar for export functionality
+      />
 
       <div style={styles.metricsContainer}>
         <div style={styles.metricBox}>
@@ -397,6 +443,8 @@ const styles = {
 };
 
 export default Dashboard;
+
+
 
 
 

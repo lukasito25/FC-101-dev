@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { saveAs } from 'file-saver';
 
-const FilterBar = ({ onFilterChange, onExport }) => {
+const FilterBar = ({ onFilterChange, entries }) => {
   const [sessionType, setSessionType] = useState('');
   const [microcycle, setMicrocycle] = useState('');
   const [objective, setObjective] = useState('');
@@ -14,6 +16,71 @@ const FilterBar = ({ onFilterChange, onExport }) => {
       objective,
       startDate,
       endDate
+    });
+  };
+
+  const handleExport = () => {
+    if (!microcycle) {
+      alert('Please select a microcycle to export.');
+      return;
+    }
+
+    if (!entries || entries.length === 0) {
+      alert('No entries available to export.');
+      return;
+    }
+
+    const microcycleEntries = entries.filter(entry => entry.microcycle === parseInt(microcycle, 10));
+
+    const totalVolume = microcycleEntries.reduce((sum, entry) => sum + (entry.volume || 0), 0);
+    const totalIntensity = microcycleEntries.reduce((sum, entry) => sum + (entry.intensity || 0), 0);
+    const totalComplexity = microcycleEntries.reduce((sum, entry) => sum + (entry.complexity || 0), 0);
+
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              text: `Training Microcycle ${microcycle}`,
+              heading: 'Title',
+            }),
+            ...microcycleEntries.map(entry => new Paragraph({
+              children: [
+                new TextRun({ text: `Date: ${entry.date}`, bold: true }),
+                new TextRun(`\nSession Type: ${entry.sessionType}`),
+                new TextRun(`\nVolume: ${entry.volume}`),
+                new TextRun(`\nIntensity: ${entry.intensity}`),
+                new TextRun(`\nComplexity: ${entry.complexity}`),
+                new TextRun(`\nObjective 1: ${entry.objective1}`),
+                new TextRun(`\nObjective 2: ${entry.objective2 || 'N/A'}`),
+                new TextRun(`\nExercises:`),
+                ...entry.exercises.map(exercise => new Paragraph({
+                  children: [
+                    new TextRun(`\n  - Goal: ${exercise.goal}`),
+                    new TextRun(`\n  - Type: ${exercise.exerciseType}`),
+                    new TextRun(`\n  - Focus: ${exercise.focus}`),
+                    new TextRun(`\n  - Description: ${exercise.description}`),
+                    new TextRun(`\n  - Duration: ${exercise.duration} minutes`),
+                    new TextRun(`\n  - Fitness Indicator: ${exercise.fitnessIndicator}`),
+                  ],
+                })),
+              ],
+            })),
+            new Paragraph({
+              text: `Summary for Microcycle ${microcycle}`,
+              heading: 'Heading1',
+              spacing: { after: 400 },
+            }),
+            new Paragraph(`Total Volume: ${totalVolume} minutes`),
+            new Paragraph(`Total Intensity: ${totalIntensity}%`),
+            new Paragraph(`Total Complexity: ${totalComplexity}`),
+          ],
+        },
+      ],
+    });
+
+    Packer.toBlob(doc).then(blob => {
+      saveAs(blob, `Training_Microcycle_${microcycle}.docx`);
     });
   };
 
@@ -96,7 +163,7 @@ const FilterBar = ({ onFilterChange, onExport }) => {
         />
       </div>
 
-      <button onClick={onExport} style={styles.exportButton}>Export</button>
+      <button onClick={handleExport} style={styles.exportButton}>Export</button>
     </div>
   );
 };
@@ -175,6 +242,8 @@ const styles = {
 };
 
 export default FilterBar;
+
+
 
 
 
