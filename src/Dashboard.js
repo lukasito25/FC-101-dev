@@ -3,7 +3,7 @@ import Header from './Header';
 import FilterBar from './FilterBar';
 import AddEntryForm from './AddEntryForm';
 
-const REPLIT_BACKEND_URL = 'https://71361e57-5621-4ce9-a477-742aef29fe22-00-23dssehx19ldy.kirk.replit.dev';
+const REPLIT_BACKEND_URL = 'https://5926c511-4ef0-4546-9b83-d40341db4663-00-2cag66hardsfm.janeway.replit.dev:3000';
 
 const Dashboard = () => {
   const [entries, setEntries] = useState([]);

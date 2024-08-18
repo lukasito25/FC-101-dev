@@ -3,11 +3,11 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 5001; // Use the PORT environment variable or default to 5000
+const port = process.env.PORT || 5001; // Use the PORT environment variable or default to 5001
 
 // CORS configuration
 app.use(cors({
-  origin: 'https://71361e57-5621-4ce9-a477-742aef29fe22-00-23dssehx19ldy.kirk.replit.dev/' 
+  origin: 'https://5926c511-4ef0-4546-9b83-d40341db4663-00-2cag66hardsfm.janeway.replit.dev:3002'
 }));
 
 // Middleware
@@ -16,7 +16,7 @@ app.use(express.json());
 // Initialize the SQLite database
 const db = new sqlite3.Database(process.env.DATABASE_URL || './dashboard.db', (err) => {
   if (err) {
-    console.error('Error opening database', err.message);
+    console.error('Error opening database:', err.message);
   } else {
     db.serialize(() => {
       // Create the `entries` table
@@ -32,7 +32,7 @@ const db = new sqlite3.Database(process.env.DATABASE_URL || './dashboard.db', (e
         complexity INTEGER
       )`, (err) => {
         if (err) {
-          console.error('Error creating entries table', err.message);
+          console.error('Error creating entries table:', err.message);
         } else {
           console.log('Table "entries" created or already exists.');
         }
@@ -51,7 +51,7 @@ const db = new sqlite3.Database(process.env.DATABASE_URL || './dashboard.db', (e
         FOREIGN KEY (entryId) REFERENCES entries(id) ON DELETE CASCADE
       )`, (err) => {
         if (err) {
-          console.error('Error creating exercises table', err.message);
+          console.error('Error creating exercises table:', err.message);
         } else {
           console.log('Table "exercises" created or already exists.');
         }
@@ -71,6 +71,12 @@ const db = new sqlite3.Database(process.env.DATABASE_URL || './dashboard.db', (e
           const insertExercise = db.prepare(`INSERT INTO exercises 
             (entryId, goal, exerciseType, focus, description, duration, fitnessIndicator) 
             VALUES (?, ?, ?, ?, ?, ?, ?)`);
+
+          const finalizeExercises = () => {
+            insertExercise.finalize(() => {
+              console.log('Dummy data insertion complete.');
+            });
+          };
 
           // First dummy entry
           insertEntry.run(
@@ -112,13 +118,6 @@ const db = new sqlite3.Database(process.env.DATABASE_URL || './dashboard.db', (e
               }
             });
 
-          // Finalize all inserts
-          const finalizeExercises = () => {
-            insertExercise.finalize(() => {
-              console.log('Dummy data insertion complete.');
-            });
-          };
-
           insertEntry.finalize();
         }
       });
@@ -140,7 +139,7 @@ app.get('/api/entries', (req, res) => {
           if (err) {
             reject(err);
           } else {
-            entry.exercises = exercises;
+            entry.exercises = exercises || [];
             resolve(entry);
           }
         });
@@ -188,7 +187,7 @@ app.post('/api/entries', (req, res) => {
         res.json({ id: entryId });
       });
     } else {
-      return res.json({ id: entryId });
+      res.json({ id: entryId });
     }
   });
 });
