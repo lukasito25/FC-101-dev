@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
 
-const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) => {
+const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev, language }) => {
   const [exerciseGoal, setExerciseGoal] = useState('');
   const [exerciseType, setExerciseType] = useState('');
   const [focus, setFocus] = useState('');
   const [description, setDescription] = useState('');
-  const [fitnessIndicator, setFitnessIndicator] = useState(''); // New state for Fitness Indicator
+  const [fitnessIndicator, setFitnessIndicator] = useState('');
   const [duration, setDuration] = useState('');
 
   const handleAddExercise = () => {
     const newExercise = {
-      id: exerciseData.length + 1, // Assign an ID based on length
+      id: exerciseData.length + 1,
       goal: exerciseGoal,
       type: exerciseType,
       focus: focus,
       description: description,
-      fitnessIndicator: fitnessIndicator, // Include Fitness Indicator
+      fitnessIndicator: fitnessIndicator,
       duration: duration,
     };
 
@@ -27,7 +27,7 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
     setExerciseType('');
     setFocus('');
     setDescription('');
-    setFitnessIndicator(''); // Reset Fitness Indicator
+    setFitnessIndicator('');
     setDuration('');
   };
 
@@ -39,9 +39,9 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
   return (
     <div>
       <div style={styles.formGroup}>
-        <label style={styles.label}>Exercise Goal:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Exercise Goal' : 'Cieľ cvičenia'}:</label>
         <select value={exerciseGoal} onChange={(e) => setExerciseGoal(e.target.value)} style={styles.select}>
-          <option value="">Select Goal</option>
+          <option value="">{language === 'EN' ? 'Select Goal' : 'Vyberte cieľ'}</option>
           <option value="HT">HT</option>
           <option value="HN">HN</option>
           <option value="KT">KT</option>
@@ -53,9 +53,9 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Exercise Type:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Exercise Type' : 'Typ cvičenia'}:</label>
         <select value={exerciseType} onChange={(e) => setExerciseType(e.target.value)} style={styles.select}>
-          <option value="">Select Type</option>
+          <option value="">{language === 'EN' ? 'Select Type' : 'Vyberte typ'}</option>
           <option value="PC">PC</option>
           <option value="HC">HC</option>
           <option value="PH">PH</option>
@@ -64,9 +64,9 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Focus:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Focus' : 'Zameranie'}:</label>
         <select value={focus} onChange={(e) => setFocus(e.target.value)} style={styles.select}>
-          <option value="">Select Focus</option>
+          <option value="">{language === 'EN' ? 'Select Focus' : 'Vyberte zameranie'}</option>
           <option value="HCJ">HCJ</option>
           <option value="HK">HK</option>
           <option value="HS">HS</option>
@@ -75,7 +75,7 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Description:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Description' : 'Popis'}:</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -84,9 +84,9 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Fitness Indicator:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Fitness Indicator' : 'Indikátor kondície'}:</label>
         <select value={fitnessIndicator} onChange={(e) => setFitnessIndicator(e.target.value)} style={styles.select}>
-          <option value="">Select Indicator</option>
+          <option value="">{language === 'EN' ? 'Select Indicator' : 'Vyberte indikátor'}</option>
           <option value="R">R</option>
           <option value="S">S</option>
           <option value="V">V</option>
@@ -95,7 +95,7 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Duration (minutes):</label>
+        <label style={styles.label}>{language === 'EN' ? 'Duration (minutes)' : 'Trvanie (minúty)'}:</label>
         <input
           type="number"
           value={duration}
@@ -107,16 +107,16 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
 
       <div style={styles.buttonGroupRight}>
         <button type="button" onClick={handleAddExercise} style={styles.addButton}>
-          Add Exercise
+          {language === 'EN' ? 'Add Exercise' : 'Pridať cvičenie'}
         </button>
       </div>
 
-      <h3 style={styles.addedExercisesTitle}>Added Exercises</h3>
+      <h3 style={styles.addedExercisesTitle}>{language === 'EN' ? 'Added Exercises' : 'Pridané cvičenia'}</h3>
       <div style={styles.exerciseTable}>
         <div style={styles.exerciseTableHeader}>
           <div style={styles.attribute}>ID</div>
-          <div style={styles.attribute}>Goal</div>
-          <div style={styles.attribute}>Duration</div>
+          <div style={styles.attribute}>{language === 'EN' ? 'Goal' : 'Cieľ'}</div>
+          <div style={styles.attribute}>{language === 'EN' ? 'Duration' : 'Trvanie'}</div>
         </div>
         {exerciseData.map((exercise) => (
           <div key={exercise.id} style={styles.exerciseTableRow}>
@@ -135,10 +135,10 @@ const Step2 = ({ exerciseData = [], setExerciseData, handleNext, handlePrev }) =
 
       <div style={styles.buttonGroup}>
         <button type="button" onClick={handlePrev} style={styles.button}>
-          Previous
+          {language === 'EN' ? 'Previous' : 'Predchádzajúci'}
         </button>
         <button type="button" onClick={handleNext} style={styles.button}>
-          Next
+          {language === 'EN' ? 'Next' : 'Ďalej'}
         </button>
       </div>
     </div>
@@ -269,6 +269,7 @@ const styles = {
 };
 
 export default Step2;
+
 
 
 

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell } from 'docx';
-import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
@@ -17,6 +15,7 @@ const Dashboard = () => {
     minutes: 0,
   });
   const [expandedSessionId, setExpandedSessionId] = useState(null);
+  const [language, setLanguage] = useState('EN'); // State for language selection
 
   const calculateMetrics = (data) => {
     const sessions = data.length;
@@ -65,7 +64,11 @@ const Dashboard = () => {
     calculateMetrics(filtered);
   };
 
-  // Function to handle export of filtered sessions based on filter bar criteria
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    // Additional logic to update the language in other parts of the app if necessary
+  };
+
   const handleExportFiltered = () => {
     if (filteredEntries.length === 0) {
       alert('No entries to export.');
@@ -106,7 +109,6 @@ const Dashboard = () => {
     });
   };
 
-  // Function to handle export of individual session
   const handleExportEntry = (entry) => {
     const doc = new Document({
       sections: [
@@ -208,38 +210,39 @@ const Dashboard = () => {
 
   return (
     <div style={styles.container}>
-      <Header />
+      <Header onLanguageChange={handleLanguageChange} language={language} />
       <FilterBar 
         onFilterChange={handleFilterChange}
         onExport={handleExportFiltered}
-        entries={entries} // Pass the entries to FilterBar for export functionality
+        entries={entries} 
+        language={language} // Pass the language state to FilterBar
       />
 
       <div style={styles.metricsContainer}>
         <div style={styles.metricBox}>
           <span style={styles.metricNumber}>{metrics.sessions}</span>
-          <span style={styles.metricLabel}>Sessions</span>
+          <span style={styles.metricLabel}>{language === 'EN' ? 'Sessions' : 'Tréningy'}</span>
         </div>
         <div style={styles.metricBox}>
           <span style={styles.metricNumber}>{metrics.minutes}</span>
-          <span style={styles.metricLabel}>Minutes</span>
+          <span style={styles.metricLabel}>{language === 'EN' ? 'Minutes' : 'Minúty'}</span>
         </div>
       </div>
 
       <div style={styles.content}>
-        <h2 style={styles.heading}>Add a New Training Session</h2>
-        <AddEntryForm onAddEntry={handleAddEntry} />
-        <h2 style={styles.heading}>Training Sessions</h2>
+        <h2 style={styles.heading}>{language === 'EN' ? 'Add a New Training Session' : 'Pridať nový tréning'}</h2>
+        <AddEntryForm onAddEntry={handleAddEntry} language={language} />
+        <h2 style={styles.heading}>{language === 'EN' ? 'Training Sessions' : 'Tréningy'}</h2>
         <div style={styles.tableContainer}>
           <table style={styles.table}>
             <thead>
               <tr>
-                <th style={styles.th}>Date</th>
-                <th style={styles.th}>Microcycle</th>
-                <th style={styles.th}>Session Type</th>
-                <th style={styles.th}>Volume</th>
-                <th style={styles.th}>Intensity</th>
-                <th style={styles.th}>Goal</th>
+                <th style={styles.th}>{language === 'EN' ? 'Date' : 'Dátum'}</th>
+                <th style={styles.th}>{language === 'EN' ? 'Microcycle' : 'Mikrocyklus'}</th>
+                <th style={styles.th}>{language === 'EN' ? 'Session Type' : 'Typ tréningu'}</th>
+                <th style={styles.th}>{language === 'EN' ? 'Volume' : 'Objem'}</th>
+                <th style={styles.th}>{language === 'EN' ? 'Intensity' : 'Intenzita'}</th>
+                <th style={styles.th}>{language === 'EN' ? 'Goal' : 'Cieľ'}</th>
               </tr>
             </thead>
             <tbody>
@@ -262,21 +265,21 @@ const Dashboard = () => {
                               icon={faDownload}
                               style={styles.exportIcon}
                               onClick={() => handleExportEntry(entry)}
-                              title="Export to Word"
+                              title={language === 'EN' ? "Export to Word" : "Exportovať do Wordu"}
                             />
                           </div>
-                          <h3>Additional Details</h3>
-                          <p><strong>Objective 2:</strong> {entry.objective2}</p>
-                          <h4>Exercises:</h4>
+                          <h3>{language === 'EN' ? 'Additional Details' : 'Ďalšie Podrobnosti'}</h3>
+                          <p><strong>{language === 'EN' ? 'Objective 2:' : 'Cieľ 2:'}</strong> {entry.objective2}</p>
+                          <h4>{language === 'EN' ? 'Exercises:' : 'Cvičenia:'}</h4>
                           <table style={styles.exerciseTable}>
                             <thead>
                               <tr>
-                                <th style={styles.exerciseTableHeader}>Goal</th>
-                                <th style={styles.exerciseTableHeader}>Type</th>
-                                <th style={styles.exerciseTableHeader}>Focus</th>
-                                <th style={styles.exerciseTableHeader}>Description</th>
-                                <th style={styles.exerciseTableHeader}>Duration</th>
-                                <th style={styles.exerciseTableHeader}>Fitness Indicator</th>
+                                <th style={styles.exerciseTableHeader}>{language === 'EN' ? 'Goal' : 'Cieľ'}</th>
+                                <th style={styles.exerciseTableHeader}>{language === 'EN' ? 'Type' : 'Typ'}</th>
+                                <th style={styles.exerciseTableHeader}>{language === 'EN' ? 'Focus' : 'Zameranie'}</th>
+                                <th style={styles.exerciseTableHeader}>{language === 'EN' ? 'Description' : 'Popis'}</th>
+                                <th style={styles.exerciseTableHeader}>{language === 'EN' ? 'Duration' : 'Trvanie'}</th>
+                                <th style={styles.exerciseTableHeader}>{language === 'EN' ? 'Fitness Indicator' : 'Kondičný Indikátor'}</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -443,19 +446,6 @@ const styles = {
 };
 
 export default Dashboard;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 
-const FilterBar = ({ onFilterChange, entries }) => {
+const FilterBar = ({ onFilterChange, entries, language }) => {
   const [sessionType, setSessionType] = useState('');
   const [microcycle, setMicrocycle] = useState('');
   const [objective, setObjective] = useState('');
@@ -28,12 +28,12 @@ const FilterBar = ({ onFilterChange, entries }) => {
 
   const handleExport = () => {
     if (!microcycle) {
-      alert('Please select a microcycle to export.');
+      alert(language === 'EN' ? 'Please select a microcycle to export.' : 'Vyberte mikrocyklus na export.');
       return;
     }
 
     if (!entries || entries.length === 0) {
-      alert('No entries available to export.');
+      alert(language === 'EN' ? 'No entries available to export.' : 'Žiadne položky na export.');
       return;
     }
 
@@ -48,39 +48,39 @@ const FilterBar = ({ onFilterChange, entries }) => {
         {
           children: [
             new Paragraph({
-              text: `Training Microcycle ${microcycle}`,
+              text: language === 'EN' ? `Training Microcycle ${microcycle}` : `Tréningový mikrocyklus ${microcycle}`,
               heading: 'Title',
             }),
             ...microcycleEntries.map(entry => new Paragraph({
               children: [
-                new TextRun({ text: `Date: ${entry.date}`, bold: true }),
-                new TextRun(`\nSession Type: ${entry.sessionType}`),
-                new TextRun(`\nVolume: ${entry.volume}`),
-                new TextRun(`\nIntensity: ${entry.intensity}`),
-                new TextRun(`\nComplexity: ${entry.complexity}`),
-                new TextRun(`\nObjective 1: ${entry.objective1}`),
-                new TextRun(`\nObjective 2: ${entry.objective2 || 'N/A'}`),
-                new TextRun(`\nExercises:`),
+                new TextRun({ text: `${language === 'EN' ? 'Date' : 'Dátum'}: ${entry.date}`, bold: true }),
+                new TextRun(`\n${language === 'EN' ? 'Session Type' : 'Typ tréningu'}: ${entry.sessionType}`),
+                new TextRun(`\n${language === 'EN' ? 'Volume' : 'Objem'}: ${entry.volume}`),
+                new TextRun(`\n${language === 'EN' ? 'Intensity' : 'Intenzita'}: ${entry.intensity}`),
+                new TextRun(`\n${language === 'EN' ? 'Complexity' : 'Zložitosť'}: ${entry.complexity}`),
+                new TextRun(`\n${language === 'EN' ? 'Objective 1' : 'Cieľ 1'}: ${entry.objective1}`),
+                new TextRun(`\n${language === 'EN' ? 'Objective 2' : 'Cieľ 2'}: ${entry.objective2 || 'N/A'}`),
+                new TextRun(`\n${language === 'EN' ? 'Exercises' : 'Cvičenia'}:`),
                 ...entry.exercises.map(exercise => new Paragraph({
                   children: [
-                    new TextRun(`\n  - Goal: ${exercise.goal}`),
-                    new TextRun(`\n  - Type: ${exercise.exerciseType}`),
-                    new TextRun(`\n  - Focus: ${exercise.focus}`),
-                    new TextRun(`\n  - Description: ${exercise.description}`),
-                    new TextRun(`\n  - Duration: ${exercise.duration} minutes`),
-                    new TextRun(`\n  - Fitness Indicator: ${exercise.fitnessIndicator}`),
+                    new TextRun(`\n  - ${language === 'EN' ? 'Goal' : 'Cieľ'}: ${exercise.goal}`),
+                    new TextRun(`\n  - ${language === 'EN' ? 'Type' : 'Typ'}: ${exercise.exerciseType}`),
+                    new TextRun(`\n  - ${language === 'EN' ? 'Focus' : 'Zameranie'}: ${exercise.focus}`),
+                    new TextRun(`\n  - ${language === 'EN' ? 'Description' : 'Popis'}: ${exercise.description}`),
+                    new TextRun(`\n  - ${language === 'EN' ? 'Duration' : 'Trvanie'}: ${exercise.duration} minutes`),
+                    new TextRun(`\n  - ${language === 'EN' ? 'Fitness Indicator' : 'Kondičný Indikátor'}: ${exercise.fitnessIndicator}`),
                   ],
                 })),
               ],
             })),
             new Paragraph({
-              text: `Summary for Microcycle ${microcycle}`,
+              text: language === 'EN' ? `Summary for Microcycle ${microcycle}` : `Zhrnutie pre mikrocyklus ${microcycle}`,
               heading: 'Heading1',
               spacing: { after: 400 },
             }),
-            new Paragraph(`Total Volume: ${totalVolume} minutes`),
-            new Paragraph(`Total Intensity: ${totalIntensity}%`),
-            new Paragraph(`Total Complexity: ${totalComplexity}`),
+            new Paragraph(`${language === 'EN' ? 'Total Volume' : 'Celkový objem'}: ${totalVolume} minutes`),
+            new Paragraph(`${language === 'EN' ? 'Total Intensity' : 'Celková intenzita'}: ${totalIntensity}%`),
+            new Paragraph(`${language === 'EN' ? 'Total Complexity' : 'Celková zložitosť'}: ${totalComplexity}`),
           ],
         },
       ],
@@ -94,7 +94,7 @@ const FilterBar = ({ onFilterChange, entries }) => {
   return (
     <div style={styles.filterBar}>
       <div style={styles.filterItem}>
-        <label style={styles.label}>Session Type:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Session Type' : 'Typ tréningu'}:</label>
         <select
           value={sessionType}
           onChange={(e) => {
@@ -103,16 +103,16 @@ const FilterBar = ({ onFilterChange, entries }) => {
           }}
           style={styles.select}
         >
-          <option value="">All Types</option>
-          <option value="Training">Training</option>
-          <option value="Match">Match</option>
-          <option value="Recovery">Recovery</option>
-          <option value="Other">Other</option>
+          <option value="">{language === 'EN' ? 'All Types' : 'Všetky typy'}</option>
+          <option value="Training">{language === 'EN' ? 'Training' : 'Tréning'}</option>
+          <option value="Match">{language === 'EN' ? 'Match' : 'Zápas'}</option>
+          <option value="Recovery">{language === 'EN' ? 'Recovery' : 'Regenerácia'}</option>
+          <option value="Other">{language === 'EN' ? 'Other' : 'Iné'}</option>
         </select>
       </div>
 
       <div style={styles.filterItem}>
-        <label style={styles.label}>Microcycle:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Microcycle' : 'Mikrocyklus'}:</label>
         <select
           value={microcycle}
           onChange={(e) => {
@@ -121,15 +121,15 @@ const FilterBar = ({ onFilterChange, entries }) => {
           }}
           style={styles.select}
         >
-          <option value="">All Microcycles</option>
+          <option value="">{language === 'EN' ? 'All Microcycles' : 'Všetky mikrocykly'}</option>
           {availableMicrocycles.map(mc => (
-            <option key={mc} value={mc}>Microcycle {mc}</option>
+            <option key={mc} value={mc}>{language === 'EN' ? 'Microcycle' : 'Mikrocyklus'} {mc}</option>
           ))}
         </select>
       </div>
 
       <div style={styles.filterItem}>
-        <label style={styles.label}>Objective:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Objective' : 'Cieľ'}:</label>
         <input
           type="text"
           value={objective}
@@ -137,13 +137,13 @@ const FilterBar = ({ onFilterChange, entries }) => {
             setObjective(e.target.value);
             handleFilterChange();
           }}
-          placeholder="Enter objective"
+          placeholder={language === 'EN' ? 'Enter objective' : 'Zadajte cieľ'}
           style={styles.input}
         />
       </div>
 
       <div style={styles.filterItem}>
-        <label style={styles.label}>From Date:</label>
+        <label style={styles.label}>{language === 'EN' ? 'From Date' : 'Od dátumu'}:</label>
         <input
           type="date"
           value={startDate}
@@ -156,7 +156,7 @@ const FilterBar = ({ onFilterChange, entries }) => {
       </div>
 
       <div style={styles.filterItem}>
-        <label style={styles.label}>To Date:</label>
+        <label style={styles.label}>{language === 'EN' ? 'To Date' : 'Do dátumu'}:</label>
         <input
           type="date"
           value={endDate}
@@ -168,7 +168,9 @@ const FilterBar = ({ onFilterChange, entries }) => {
         />
       </div>
 
-      <button onClick={handleExport} style={styles.exportButton}>Export</button>
+      <button onClick={handleExport} style={styles.exportButton}>
+        {language === 'EN' ? 'Export' : 'Exportovať'}
+      </button>
     </div>
   );
 };
@@ -247,6 +249,7 @@ const styles = {
 };
 
 export default FilterBar;
+
 
 
 

@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Step3 = ({ volume, intensity, complexity, setVolume, setIntensity, setComplexity, handlePrev, handleSubmit, exerciseData }) => {
+const Step3 = ({ volume, intensity, complexity, setVolume, setIntensity, setComplexity, handlePrev, handleSubmit, exerciseData, language }) => {
   return (
     <div>
       <div style={styles.formGroup}>
-        <label style={styles.label}>Volume (Minutes):</label>
+        <label style={styles.label}>{language === 'EN' ? 'Volume (Minutes):' : 'Objem (minúty):'}</label>
         <input
           type="number"
           value={volume}
@@ -16,7 +16,7 @@ const Step3 = ({ volume, intensity, complexity, setVolume, setIntensity, setComp
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Intensity (%):</label>
+        <label style={styles.label}>{language === 'EN' ? 'Intensity (%):' : 'Intenzita (%):'}</label>
         <input
           type="number"
           value={intensity}
@@ -29,33 +29,26 @@ const Step3 = ({ volume, intensity, complexity, setVolume, setIntensity, setComp
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Complexity (Optional):</label>
+        <label style={styles.label}>{language === 'EN' ? 'Complexity (Optional):' : 'Komplexnosť (voliteľné):'}</label>
         <select
           value={complexity}
           onChange={(e) => setComplexity(e.target.value)}
           style={styles.select}
         >
-          <option value="">Select Complexity</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
+          <option value="">{language === 'EN' ? 'Select Complexity' : 'Vyberte komplexnosť'}</option>
+          {[...Array(10).keys()].map(num => (
+            <option key={num + 1} value={num + 1}>{num + 1}</option>
+          ))}
         </select>
       </div>
 
       {/* Added Exercises Table */}
-      <h3 style={styles.addedExercisesTitle}>Summary of Added Exercises</h3>
+      <h3 style={styles.addedExercisesTitle}>{language === 'EN' ? 'Summary of Added Exercises' : 'Súhrn pridaných cvičení'}</h3>
       <div style={styles.exerciseTable}>
         <div style={styles.exerciseTableHeader}>
           <div style={styles.attribute}>ID</div>
-          <div style={styles.attribute}>Goal</div>
-          <div style={styles.attribute}>Duration</div>
+          <div style={styles.attribute}>{language === 'EN' ? 'Goal' : 'Cieľ'}</div>
+          <div style={styles.attribute}>{language === 'EN' ? 'Duration' : 'Trvanie'}</div>
         </div>
         {exerciseData.map((exercise) => (
           <div key={exercise.id} style={styles.exerciseTableRow}>
@@ -68,10 +61,10 @@ const Step3 = ({ volume, intensity, complexity, setVolume, setIntensity, setComp
 
       <div style={styles.buttonGroup}>
         <button type="button" onClick={handlePrev} style={styles.button}>
-          Previous
+          {language === 'EN' ? 'Previous' : 'Predchádzajúci'}
         </button>
         <button type="submit" style={styles.button}>
-          Submit
+          {language === 'EN' ? 'Submit' : 'Odoslať'}
         </button>
       </div>
     </div>
@@ -169,4 +162,5 @@ const styles = {
 };
 
 export default Step3;
+
 

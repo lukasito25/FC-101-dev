@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Step1 = ({ date, sessionType, microcycle, objective1, objective2, setDate, setSessionType, setMicrocycle, setObjective1, setObjective2, handleNext }) => {
+const Step1 = ({ date, sessionType, microcycle, objective1, objective2, setDate, setSessionType, setMicrocycle, setObjective1, setObjective2, handleNext, language }) => {
   return (
     <div>
       <div style={styles.formGroup}>
-        <label style={styles.label}>Date:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Date:' : 'Dátum:'}</label>
         <input
           type="date"
           value={date}
@@ -15,23 +15,23 @@ const Step1 = ({ date, sessionType, microcycle, objective1, objective2, setDate,
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Session Type:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Session Type:' : 'Typ tréningu:'}</label>
         <select
           value={sessionType}
           onChange={(e) => setSessionType(e.target.value)}
           style={styles.select}
           required
         >
-          <option value="">Select Type</option>
-          <option value="Training">Training</option>
-          <option value="Match">Match</option>
-          <option value="Recovery">Recovery</option>
-          <option value="Other">Other</option>
+          <option value="">{language === 'EN' ? 'Select Type' : 'Vyberte typ'}</option>
+          <option value="Training">{language === 'EN' ? 'Training' : 'Tréning'}</option>
+          <option value="Match">{language === 'EN' ? 'Match' : 'Zápas'}</option>
+          <option value="Recovery">{language === 'EN' ? 'Recovery' : 'Obnova'}</option>
+          <option value="Other">{language === 'EN' ? 'Other' : 'Iné'}</option>
         </select>
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Microcycle (Number):</label>
+        <label style={styles.label}>{language === 'EN' ? 'Microcycle (Number):' : 'Mikrocyklus (číslo):'}</label>
         <input
           type="number"
           value={microcycle}
@@ -43,7 +43,7 @@ const Step1 = ({ date, sessionType, microcycle, objective1, objective2, setDate,
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Objective 1:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Objective 1:' : 'Cieľ 1:'}</label>
         <input
           type="text"
           value={objective1}
@@ -54,7 +54,7 @@ const Step1 = ({ date, sessionType, microcycle, objective1, objective2, setDate,
       </div>
 
       <div style={styles.formGroup}>
-        <label style={styles.label}>Objective 2:</label>
+        <label style={styles.label}>{language === 'EN' ? 'Objective 2:' : 'Cieľ 2:'}</label>
         <input
           type="text"
           value={objective2}
@@ -65,7 +65,7 @@ const Step1 = ({ date, sessionType, microcycle, objective1, objective2, setDate,
 
       <div style={styles.buttonGroupRight}>
         <button type="button" onClick={handleNext} style={styles.button}>
-          Next
+          {language === 'EN' ? 'Next' : 'Ďalej'}
         </button>
       </div>
     </div>
@@ -122,3 +122,5 @@ const styles = {
 };
 
 export default Step1;
+
+

@@ -3,7 +3,7 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
 
-const AddEntryForm = ({ onAddEntry }) => {
+const AddEntryForm = ({ onAddEntry, language }) => {
   const [step, setStep] = useState(1);
 
   // State variables for form fields
@@ -63,7 +63,7 @@ const AddEntryForm = ({ onAddEntry }) => {
           }}
           onClick={() => setStep(1)}
         >
-          Step 1
+          {language === 'EN' ? 'Step 1' : 'Krok 1'}
         </div>
         <div
           style={{
@@ -72,7 +72,7 @@ const AddEntryForm = ({ onAddEntry }) => {
           }}
           onClick={() => setStep(2)}
         >
-          Step 2
+          {language === 'EN' ? 'Step 2' : 'Krok 2'}
         </div>
         <div
           style={{
@@ -81,7 +81,7 @@ const AddEntryForm = ({ onAddEntry }) => {
           }}
           onClick={() => setStep(3)}
         >
-          Step 3
+          {language === 'EN' ? 'Step 3' : 'Krok 3'}
         </div>
       </div>
 
@@ -98,6 +98,7 @@ const AddEntryForm = ({ onAddEntry }) => {
           objective2={objective2}
           setObjective2={setObjective2}
           handleNext={handleNext}
+          language={language} // Pass the language prop
         />
       )}
 
@@ -107,6 +108,7 @@ const AddEntryForm = ({ onAddEntry }) => {
           setExerciseData={setExerciseData}
           handleNext={handleNext}
           handlePrev={handlePrev}
+          language={language} // Pass the language prop
         />
       )}
 
@@ -121,6 +123,7 @@ const AddEntryForm = ({ onAddEntry }) => {
           exerciseData={exerciseData}  // Pass exercise data to Step 3
           handlePrev={handlePrev}
           handleSubmit={handleSubmit}
+          language={language} // Pass the language prop
         />
       )}
     </form>
@@ -153,6 +156,7 @@ const styles = {
 };
 
 export default AddEntryForm;
+
 
 
 
