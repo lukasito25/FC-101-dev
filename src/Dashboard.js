@@ -7,7 +7,7 @@ import AddEntryForm from './AddEntryForm';
 
 const REPLIT_BACKEND_URL = 'https://5926c511-4ef0-4546-9b83-d40341db4663-00-2cag66hardsfm.janeway.replit.dev:3000';
 
-const Dashboard = () => {
+const Dashboard = ({ onLogout }) => {
   const [entries, setEntries] = useState([]);
   const [filteredEntries, setFilteredEntries] = useState([]);
   const [metrics, setMetrics] = useState({
@@ -210,7 +210,7 @@ const Dashboard = () => {
 
   return (
     <div style={styles.container}>
-      <Header onLanguageChange={handleLanguageChange} language={language} />
+      <Header onLanguageChange={handleLanguageChange} language={language} onLogout={onLogout} />
       <FilterBar 
         onFilterChange={handleFilterChange}
         onExport={handleExportFiltered}
@@ -446,6 +446,7 @@ const styles = {
 };
 
 export default Dashboard;
+
 
 
 
